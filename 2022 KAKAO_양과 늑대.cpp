@@ -8,6 +8,20 @@ using namespace std;
 int tree[20][2];
 bool visited[20];
 
+// 이동 경로에 대한 순서 정하기
+void set_order(int cur, vector<int>& v) {
+	if (tree[cur][0]) {
+		v.push_back(tree[cur][0]);
+		set_order(tree[cur][0], v);
+		if (tree[cur][1]) {
+			v.push_back(tree[cur][1]);
+			set_order(tree[cur][1], v);
+		}
+	}
+}
+
+// fin 위치로 이동할 수 있는지를 판단하는 함수
+// 이때, cur 의 초깃값은 root 노드, fin 위치에는 양이 존재
 bool tree_traversal(int cur, int fin, int& sheep, int& wolf,
 	vector<int> info, deque<int> Dq) {
 	if (cur == fin) {
@@ -44,18 +58,10 @@ bool tree_traversal(int cur, int fin, int& sheep, int& wolf,
 	return ret;
 }
 
-void set_order(int cur, vector<int>& v) {
-	if (tree[cur][0]) {
-		v.push_back(tree[cur][0]);
-		set_order(tree[cur][0], v);
-		if (tree[cur][1]) {
-			v.push_back(tree[cur][1]);
-			set_order(tree[cur][1], v);
-		}
-	}
-}
-
-void visited_restore(int cur, int fin, int &sheep, int &wolf, 
+// 역으로 방문을 해제해주는 함수
+// 이때 양(해제) => 늑대(해제) => 늑대(해제) => 양(종료) 방법으로 진행
+// 즉, 양을 한번 더 만날 경우 return  
+void visited_restore(int cur, int fin, int& sheep, int& wolf,
 	vector<int> info, deque<int> Dq) {
 	if (cur == fin) {
 		visited[Dq.back()] = false;
@@ -86,6 +92,7 @@ void visited_restore(int cur, int fin, int &sheep, int &wolf,
 	}
 }
 
+// 재귀적으로 양을 최대로 모을 수 있도록 구하는 함수
 int sheep_and_wolf(int sheep_cnt, int wolf_cnt, vector<int>& info, vector<int>& order) {
 	int result = sheep_cnt;
 	int tmp_sheep = sheep_cnt, tmp_wolf = wolf_cnt;
