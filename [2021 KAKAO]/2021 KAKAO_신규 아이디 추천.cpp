@@ -27,18 +27,17 @@ string solution(string new_id) {
 	// 3단계
 	new_id = answer;
 	answer = "";
-	int cnt = 0;
 	for (int i = 0; i < new_id.size(); i++) {
 		if (new_id[i] == '.') {
-			cnt++;
+			while (i < new_id.size() && new_id[i] == '.') {
+				i++;
+			}
+			answer += ".";
+			i -= 1;
 		}
-		else {
-			if (cnt >= 1) answer += ".";
-			cnt = 0;
+		else
 			answer += new_id[i];
-		}
 	}
-	if (cnt >= 1) answer += ".";
 
 	// 4단계
 	new_id = answer;
@@ -56,15 +55,9 @@ string solution(string new_id) {
 	// 6단계
 	answer = "";
 	if (new_id.size() >= 16) {
-		for (int i = 0; i < 15; i++) {
-			answer += new_id[i];
-		}
-		if (answer[14] == '.') {
-			answer = "";
-			for (int i = 0; i < 14; i++) {
-				answer += new_id[i];
-			}
-		}
+		answer = new_id.substr(0, 15);
+		if (new_id[14] == '.')
+			answer = new_id.substr(0, 14);
 	}
 	else answer = new_id;
 
@@ -72,9 +65,8 @@ string solution(string new_id) {
 	if (answer.size() <= 2) {
 		char c = answer[answer.size() - 1];
 		if (answer.size() == 1) {
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 2; i++)
 				answer += c;
-			}
 		}
 		else {
 			answer += c;
